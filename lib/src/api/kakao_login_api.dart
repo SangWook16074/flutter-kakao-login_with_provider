@@ -2,42 +2,36 @@ import 'package:flutter/services.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 
 class KakaoLoginApi {
-  signWithKakao() {
+  signWithKakao() async {
     final UserApi api = UserApi.instance;
+    if (await isKakaoTalkInstalled()) {
+      try {
+        api.loginWithKakaoTalk().then((_) {
+          return api.me();
+        });
+      } catch (error) {
+        print('카카오톡으로 로그인 실패 $error');
 
-    return isKakaoTalkInstalled().then((isInstalled) {
-      // 카톡이 설치되었다면
-      if (isInstalled) {
-        try {
-          // 카톡으로 로그인
-          api.loginWithKakaoTalk().then((_) {
-            return api.me();
-          });
-        } catch (e) {
-          // 의도적인 뒤로가기 예외처리
-          if (e is PlatformException && e.code == "CANCELED") {
-            return;
-          }
-          // 카톡에 로그인되어있지 않으면 계정으로 로그인
-          try {
-            api.loginWithKakaoAccount().then((_) {
-              return api.me();
-            });
-          } catch (e) {
-            print(e);
-          }
+        // 사용자가 카카오톡 설치 후 디바이스 권한 요청 화면에서 로그인을 취소한 경우,
+        // 의도적인 로그인 취소로 보고 카카오계정으로 로그인 시도 없이 로그인 취소로 처리 (예: 뒤로 가기)
+        if (error is PlatformException && error.code == 'CANCELED') {
+          return;
         }
-      } else {
-        // 카톡이 설치되어있지 않으면
-        // 계정으로 로그인
+        // 카카오톡에 연결된 카카오계정이 없는 경우, 카카오계정으로 로그인
         try {
-          api.loginWithKakaoAccount().then((_) {
-            return api.me();
-          });
-        } catch (e) {
-          print(e);
+          await UserApi.instance.loginWithKakaoAccount();
+          return api.me();
+        } catch (error) {
+          print('카카오계정으로 로그인 실패 $error');
         }
       }
-    });
+    } else {
+      try {
+        await UserApi.instance.loginWithKakaoAccount();
+        return api.me();
+      } catch (error) {
+        print('카카오계정으로 로그인 실패 $error');
+      }
+    }
   }
 }

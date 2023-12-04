@@ -9,8 +9,8 @@ class UserController with ChangeNotifier {
 
   UserController({required this.kakaoLoginApi});
 
-  void kakaoLogin() async {
-    kakaoLoginApi.signWithKakao().then((User? user) {
+  void kakaoLogin() {
+    kakaoLoginApi.signWithKakao().then((user) {
       if (user != null) {
         _user = user;
         notifyListeners();
