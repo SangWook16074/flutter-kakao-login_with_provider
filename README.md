@@ -1,16 +1,7 @@
 # flutter_kakao_login_with_provider
 
-A new Flutter project.
+플러터로 제작한 카카오 로그인 예제입니다.
 
-## Getting Started
+이 예제를 활용하면 안드로이드, IOS, Web에서 모두 카카오 로그인을 사용할 수 있습니다.
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## 카카오 로그인 사용 화면
